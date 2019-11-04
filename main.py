@@ -10,9 +10,9 @@ class Game:
         self.grid_height = height
 
         self.y = 0
-        self.x = self.grid_width/2
+        self.x = 5
 
-        self.grid = [[i for i in range(self.grid_width)] for j in range(self.grid_height)]
+        self.grid = [[0 for i in range(self.grid_height)] for j in range(self.grid_width)]
 
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
@@ -39,23 +39,39 @@ class Game:
                         self.y += 1
                     self.update_screen()
 
-            if not self.calculate_collision(0, 2): 
+            if not self.calculate_collision(0, 1): 
                 time.sleep(0.05)
                 self.y += 1
                 self.update_screen()
+            else: 
+                self.store_block()
+                self.x = 5
+                self.y = 0
+
 
     def update_screen(self):
         self.screen.fill((0,0,0))
-        self.draw_block()
+        self.draw_moving_block()
+        self.draw_stationary_blocks()
         pygame.display.update()
 
-    def draw_block(self):
+    def draw_moving_block(self):
         pygame.draw.rect(self.screen, (255, 255, 255), 
                         (self.x * 50, self.y * 50, 50, 50))
 
+    def store_block(self):
+        self.grid[self.x][self.y] = 1
+
+    def draw_stationary_blocks(self):
+        for col in range(len(self.grid)):
+            for row in range(len(self.grid[col])):
+                if self.grid[col][row] == 1:
+                    pygame.draw.rect(self.screen, (255, 255, 255), 
+                                    (col * 50, row * 50, 50, 50))
+
     def calculate_collision(self, dx, dy):
         return (not (0 <= self.x + dx < self.grid_width)
-                or not (0 <= self.y + dy <= self.grid_height))
+                or not (0 <= self.y + dy < self.grid_height))
 
 
 if __name__ == "__main__":
