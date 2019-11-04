@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import random
 import time
+import sys
 
 
 class Game:
@@ -71,7 +72,8 @@ class Game:
 
     def calculate_collision(self, dx, dy):
         return (not (0 <= self.x + dx < self.grid_width)
-                or not (0 <= self.y + dy < self.grid_height))
+                or not (0 <= self.y + dy < self.grid_height)
+                or self.grid[self.x + dx][self.y + dy])
 
 
 if __name__ == "__main__":
