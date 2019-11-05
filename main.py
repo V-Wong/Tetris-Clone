@@ -18,10 +18,10 @@ class Game:
     def run(self):
         running = True
 
-        block = None
+        tetromino = None
         while running:
-            if not block:
-                block = Square(self.screen)
+            if not tetromino:
+                tetromino = Square(self.screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -29,30 +29,29 @@ class Game:
                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        if self.calculate_collision(block, 1, 0): 
+                        if self.calculate_collision(tetromino, 1, 0): 
                             break
-                        block.update_position(1, 0)
+                        tetromino.update_position(1, 0)
                     elif event.key == pygame.K_LEFT:
-                        if self.calculate_collision(block, -1, 0): 
+                        if self.calculate_collision(tetromino, -1, 0): 
                             break
-                        block.update_position(-1, 0)
+                        tetromino.update_position(-1, 0)
                     elif event.key == pygame.K_DOWN:
-                        if self.calculate_collision(block, 0, 1): 
+                        if self.calculate_collision(tetromino, 0, 1): 
                             break
-                        block.update_position(0, 1)
-                    self.update_screen(block)
+                        tetromino.update_position(0, 1)
+                    self.update_screen(tetromino)
 
-            if not self.calculate_collision(block, 0, 1): 
+            if not self.calculate_collision(tetromino, 0, 1): 
                 time.sleep(0.05)
-                block.update_position(0, 1)
-                self.update_screen(block)
+                tetromino.update_position(0, 1)
+                self.update_screen(tetromino)
             else:
-                self.store_block(block)
+                self.store_block(tetromino)
+                tetromino = None
             
             if self.lose_checking():
                 running = False
-
-            print(block.blocks)
 
     def update_screen(self, block):
         self.screen.fill((0,0,0))
@@ -69,7 +68,7 @@ class Game:
             for row in range(len(self.grid[col])):
                 if self.grid[col][row] == 1:
                     pygame.draw.rect(self.screen, (255, 255, 255), 
-                                    (col * 50, row * 50, 50, 50))
+                                    (col * 50, row * 50, 50, 50), 1)
 
     def calculate_collision(self, tetromino, dx, dy):
         for block in tetromino.blocks:
@@ -83,7 +82,6 @@ class Game:
     def lose_checking(self):
         for col in self.grid:
             if col[0] == 1:
-                print("You lose")
                 return True
         else:
             return False
@@ -101,9 +99,9 @@ class Square:
     def draw_moving_block(self):
         for block in self.blocks:
             pygame.draw.rect(self.screen, (255, 255, 255), 
-                            (block[0] * 50, block[1] * 50, 50, 50))
+                            (block[0] * 50, block[1] * 50, 50, 50), 1)
 
 
 if __name__ == "__main__":
-    game = Game(10, 20)
+    game = Game(12, 20)
     game.run()
