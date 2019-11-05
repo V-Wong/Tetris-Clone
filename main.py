@@ -15,13 +15,15 @@ class Game:
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
+        self.tetromino_types = [Square, Line, T]
+
     def run(self):
         running = True
 
         tetromino = None
         while running:
             if not tetromino:
-                tetromino = Square(self.screen)
+                tetromino = random.choice(self.tetromino_types)(self.screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -68,7 +70,7 @@ class Game:
             for row in range(len(self.grid[col])):
                 if self.grid[col][row] == 1:
                     pygame.draw.rect(self.screen, (255, 255, 255), 
-                                    (col * 50, row * 50, 50, 50), 1)
+                                    (col * 50, row * 50, 50, 50))
 
     def calculate_collision(self, tetromino, dx, dy):
         for block in tetromino.blocks:
@@ -86,10 +88,10 @@ class Game:
         else:
             return False
 
-class Square:
+
+class Tetromino:
     def __init__(self, screen):
-        self.blocks =  [[5, 0], [5, 1], [6,0], [6, 1]]
-        self.screen = screen
+        pass
 
     def update_position(self, dx, dy):
         for block in self.blocks:
@@ -100,6 +102,30 @@ class Square:
         for block in self.blocks:
             pygame.draw.rect(self.screen, (255, 255, 255), 
                             (block[0] * 50, block[1] * 50, 50, 50), 1)
+
+
+class Square(Tetromino):
+    def __init__(self, screen):
+        self.blocks =  [[5, 0], [5, 1], [6,0], [6, 1]]
+        self.screen = screen
+
+
+class Line(Tetromino):
+    def __init__(self, screen):
+        self.blocks =  [[5, 0], [5, 1], [5, 2], [5, 3]]
+        self.screen = screen
+
+
+class T(Tetromino):
+    def __init__(self, screen):
+        self.blocks =  [[5, 0], [6, 0], [7, 0], [6, 1]]
+        self.screen = screen
+
+
+class L(Tetromino):
+    def __init__(self, screen):
+        self.blocks =  [[5, 0], [6, 0], [7, 0], [5, 1]]
+        self.screen = screen
 
 
 if __name__ == "__main__":
