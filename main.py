@@ -10,9 +10,6 @@ class Game:
         self.grid_width = width
         self.grid_height = height
 
-        self.y = 0
-        self.x = 5
-
         self.grid = [[0 for i in range(self.grid_height)] for j in range(self.grid_width)]
 
         self.screen = pygame.display.set_mode(
@@ -20,51 +17,52 @@ class Game:
 
     def run(self):
         running = True
+
+        block = None
         while running:
+            if not block:
+                block = Square(self.screen)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = sys.exit()
                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        if self.calculate_collision(1, 0): 
+                        if self.calculate_collision(block, 1, 0): 
                             break
-                        self.x += 1
+                        block.update_position(1, 0)
                     elif event.key == pygame.K_LEFT:
-                        if self.calculate_collision(-1, 0): 
+                        if self.calculate_collision(block, -1, 0): 
                             break
-                        self.x -= 1
+                        block.update_position(-1, 0)
                     elif event.key == pygame.K_DOWN:
-                        if self.calculate_collision(0, 1): 
+                        if self.calculate_collision(block, 0, 1): 
                             break
-                        self.y += 1
-                    self.update_screen()
+                        block.update_position(0, 1)
+                    self.update_screen(block)
 
-            if not self.calculate_collision(0, 1): 
+            if not self.calculate_collision(block, 0, 1): 
                 time.sleep(0.05)
-                self.y += 1
-                self.update_screen()
-            else: 
-                self.store_block()
-                self.x = 5
-                self.y = 0
+                block.update_position(0, 1)
+                self.update_screen(block)
+            else:
+                self.store_block(block)
             
             if self.lose_checking():
                 running = False
 
+            print(block.blocks)
 
-    def update_screen(self):
+    def update_screen(self, block):
         self.screen.fill((0,0,0))
-        self.draw_moving_block()
+        block.draw_moving_block()
         self.draw_stationary_blocks()
         pygame.display.update()
 
-    def draw_moving_block(self):
-        pygame.draw.rect(self.screen, (255, 255, 255), 
-                        (self.x * 50, self.y * 50, 50, 50))
-
-    def store_block(self):
-        self.grid[self.x][self.y] = 1
+    def store_block(self, tetromino):
+        for block in tetromino.blocks:
+            self.grid[block[0]][block[1]] = 1
 
     def draw_stationary_blocks(self):
         for col in range(len(self.grid)):
@@ -73,10 +71,14 @@ class Game:
                     pygame.draw.rect(self.screen, (255, 255, 255), 
                                     (col * 50, row * 50, 50, 50))
 
-    def calculate_collision(self, dx, dy):
-        return (not (0 <= self.x + dx < self.grid_width)
-                or not (0 <= self.y + dy < self.grid_height)
-                or self.grid[self.x + dx][self.y + dy])
+    def calculate_collision(self, tetromino, dx, dy):
+        for block in tetromino.blocks:
+            if (not (0 <= block[0] + dx < self.grid_width)
+                    or not (0 <= block[1] + dy < self.grid_height)
+                    or self.grid[block[0] + dx][block[1] + dy]):
+                return True
+        else:
+            return False
 
     def lose_checking(self):
         for col in self.grid:
@@ -85,6 +87,21 @@ class Game:
                 return True
         else:
             return False
+
+class Square:
+    def __init__(self, screen):
+        self.blocks =  [[5, 0], [5, 1], [6,0], [6, 1]]
+        self.screen = screen
+
+    def update_position(self, dx, dy):
+        for block in self.blocks:
+            block[0] += dx
+            block[1] += dy
+
+    def draw_moving_block(self):
+        for block in self.blocks:
+            pygame.draw.rect(self.screen, (255, 255, 255), 
+                            (block[0] * 50, block[1] * 50, 50, 50))
 
 
 if __name__ == "__main__":
