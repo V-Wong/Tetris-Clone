@@ -31,20 +31,19 @@ class Game:
                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        if self.calculate_collision(tetromino, 1, 0): 
-                            break
-                        tetromino.update_position(1, 0)
+                        if not self.calculate_collision(tetromino, 1, 0): 
+                            tetromino.update_position(1, 0)
                     elif event.key == pygame.K_LEFT:
-                        if self.calculate_collision(tetromino, -1, 0): 
-                            break
-                        tetromino.update_position(-1, 0)
+                        if not self.calculate_collision(tetromino, -1, 0): 
+                            tetromino.update_position(-1, 0)
                     elif event.key == pygame.K_DOWN:
-                        if self.calculate_collision(tetromino, 0, 1): 
-                            break
-                        tetromino.update_position(0, 1)
+                        if not self.calculate_collision(tetromino, 0, 1): 
+                            tetromino.update_position(0, 1)
                     self.update_screen(tetromino)
 
-            if not self.calculate_collision(tetromino, 0, 1): 
+            if self.lose_checking():
+                running = False
+            elif not self.calculate_collision(tetromino, 0, 1): 
                 time.sleep(0.05)
                 tetromino.update_position(0, 1)
                 self.update_screen(tetromino)
@@ -52,9 +51,6 @@ class Game:
                 self.store_block(tetromino)
                 tetromino = None
             
-            if self.lose_checking():
-                running = False
-
     def update_screen(self, tetromino):
         self.screen.fill((0,0,0))
         tetromino.draw_moving_block()
@@ -85,7 +81,7 @@ class Game:
 
     def lose_checking(self):
         for col in self.grid:
-            if col[0] == 1:
+            if col[0]:
                 return True
         else:
             return False
