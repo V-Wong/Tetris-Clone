@@ -15,7 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
-        self.tetromino_types = [Square, Line, T]
+        self.tetromino_types = [Square, Line, T, L]
 
     def run(self):
         running = True
@@ -55,22 +55,24 @@ class Game:
             if self.lose_checking():
                 running = False
 
-    def update_screen(self, block):
+    def update_screen(self, tetromino):
         self.screen.fill((0,0,0))
-        block.draw_moving_block()
+        tetromino.draw_moving_block()
         self.draw_stationary_blocks()
         pygame.display.update()
 
     def store_block(self, tetromino):
         for block in tetromino.blocks:
-            self.grid[block[0]][block[1]] = 1
+            self.grid[block[0]][block[1]] = tetromino.colour
 
     def draw_stationary_blocks(self):
         for col in range(len(self.grid)):
             for row in range(len(self.grid[col])):
-                if self.grid[col][row] == 1:
-                    pygame.draw.rect(self.screen, (255, 255, 255), 
+                if self.grid[col][row]:
+                    pygame.draw.rect(self.screen, self.grid[col][row], 
                                     (col * 50, row * 50, 50, 50))
+                    pygame.draw.rect(self.screen, (255, 255, 255), 
+                                    (col * 50, row * 50, 50, 50), 1)
 
     def calculate_collision(self, tetromino, dx, dy):
         for block in tetromino.blocks:
@@ -100,6 +102,8 @@ class Tetromino:
 
     def draw_moving_block(self):
         for block in self.blocks:
+            pygame.draw.rect(self.screen, self.colour, 
+                            (block[0] * 50, block[1] * 50, 50, 50))
             pygame.draw.rect(self.screen, (255, 255, 255), 
                             (block[0] * 50, block[1] * 50, 50, 50), 1)
 
@@ -108,24 +112,28 @@ class Square(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [5, 1], [6,0], [6, 1]]
         self.screen = screen
+        self.colour = (0, 255, 255)
 
 
 class Line(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [5, 1], [5, 2], [5, 3]]
         self.screen = screen
+        self.colour = (255, 0, 0)
 
 
 class T(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [6, 0], [7, 0], [6, 1]]
         self.screen = screen
+        self.colour = (0, 255, 0)
 
 
 class L(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [6, 0], [7, 0], [5, 1]]
         self.screen = screen
+        self.colour = (0, 0, 255)
 
 
 if __name__ == "__main__":
