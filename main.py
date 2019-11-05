@@ -15,7 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
-        self.tetromino_types = [Line]
+        self.tetromino_types = [T]
 
     def run(self):
         running = True
@@ -41,13 +41,15 @@ class Game:
                             tetromino.update_position(0, 1)
                     elif event.key == pygame.K_z:
                         tetromino.rotate()
+                    elif event.key == pygame.K_SPACE:
+                        tetromino.update_position(0, 1)
                     self.update_screen(tetromino)
 
             if self.lose_checking():
                 pass
             elif not self.calculate_collision(tetromino, 0, 1): 
                 time.sleep(0.05)
-                tetromino.update_position(0, 1)
+                # tetromino.update_position(0, 1)
                 self.update_screen(tetromino)
             else:
                 self.store_block(tetromino)
@@ -167,6 +169,26 @@ class T(Tetromino):
         self.colour = (0, 255, 0)
         self.rotation = 0
 
+    def rotate(self):
+        if self.rotation % 4 == 0:
+            self.blocks[0] = [self.blocks[0][0] + 1, self.blocks[0][1] - 1]
+            self.blocks[2] = [self.blocks[2][0] - 1, self.blocks[2][1] + 1]
+            self.blocks[3] = [self.blocks[3][0] - 1, self.blocks[3][1] - 1]
+        elif self.rotation % 4 == 1:
+            self.blocks[0] = [self.blocks[0][0] + 1, self.blocks[0][1] + 1]
+            self.blocks[2] = [self.blocks[2][0] - 1, self.blocks[2][1] - 1]
+            self.blocks[3] = [self.blocks[3][0] + 1, self.blocks[3][1] - 1]
+        elif self.rotation % 4 == 2:
+            self.blocks[0] = [self.blocks[0][0] - 1, self.blocks[0][1] + 1]
+            self.blocks[2] = [self.blocks[2][0] + 1, self.blocks[2][1] - 1]
+            self.blocks[3] = [self.blocks[3][0] + 1, self.blocks[3][1] + 1]
+        elif self.rotation % 4 == 3:
+            self.blocks[0] = [self.blocks[0][0] - 1, self.blocks[0][1] - 1]
+            self.blocks[2] = [self.blocks[2][0] + 1, self.blocks[2][1] + 1]
+            self.blocks[3] = [self.blocks[3][0] - 1, self.blocks[3][1] + 1]
+
+ 
+        self.rotation += 1
 
 class L(Tetromino):
     def __init__(self, screen):
