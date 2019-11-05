@@ -48,6 +48,9 @@ class Game:
                 self.store_block()
                 self.x = 5
                 self.y = 0
+            
+            if self.lose_checking():
+                running = False
 
 
     def update_screen(self):
@@ -74,6 +77,14 @@ class Game:
         return (not (0 <= self.x + dx < self.grid_width)
                 or not (0 <= self.y + dy < self.grid_height)
                 or self.grid[self.x + dx][self.y + dy])
+
+    def lose_checking(self):
+        for col in self.grid:
+            if col[0] == 1:
+                print("You lose")
+                return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
