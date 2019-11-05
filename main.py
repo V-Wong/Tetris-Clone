@@ -15,7 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
-        self.tetromino_types = [Square, Line, T, L]
+        self.tetromino_types = [Line]
 
     def run(self):
         running = True
@@ -39,6 +39,8 @@ class Game:
                     elif event.key == pygame.K_DOWN:
                         if not self.calculate_collision(tetromino, 0, 1): 
                             tetromino.update_position(0, 1)
+                    elif event.key == pygame.K_z:
+                        tetromino.rotate()
                     self.update_screen(tetromino)
 
             if self.lose_checking():
@@ -103,12 +105,16 @@ class Tetromino:
             pygame.draw.rect(self.screen, (255, 255, 255), 
                             (block[0] * 50, block[1] * 50, 50, 50), 1)
 
+    def rotate(self):
+        pass
+
 
 class Square(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [5, 1], [6,0], [6, 1]]
         self.screen = screen
         self.colour = (0, 255, 255)
+        self.rotation = 0
 
 
 class Line(Tetromino):
@@ -116,13 +122,33 @@ class Line(Tetromino):
         self.blocks =  [[5, 0], [5, 1], [5, 2], [5, 3]]
         self.screen = screen
         self.colour = (255, 0, 0)
+        self.rotation = 0
 
+    def rotate(self):
+        if self.rotation % 2 == 0:
+            y = self.blocks[2][1]
+
+            i = -1
+            for block in self.blocks:
+                block[0], block[1] = block[0] + i, y
+                i += 1
+
+        else:
+            x = self.blocks[2][0]
+
+            i = -1
+            for block in self.blocks:
+                block[0], block[1] = x, block[1] + i
+                i += 1
+            
+        self.rotation += 1
 
 class T(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [6, 0], [7, 0], [6, 1]]
         self.screen = screen
         self.colour = (0, 255, 0)
+        self.rotation = 0
 
 
 class L(Tetromino):
@@ -130,6 +156,7 @@ class L(Tetromino):
         self.blocks =  [[5, 0], [6, 0], [7, 0], [5, 1]]
         self.screen = screen
         self.colour = (0, 0, 255)
+        self.rotation = 0
 
 
 if __name__ == "__main__":
