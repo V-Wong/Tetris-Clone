@@ -44,7 +44,7 @@ class Game:
                     self.update_screen(tetromino)
 
             if self.lose_checking():
-                running = False
+                pass
             elif not self.calculate_collision(tetromino, 0, 1): 
                 time.sleep(0.05)
                 tetromino.update_position(0, 1)
@@ -125,23 +125,40 @@ class Line(Tetromino):
         self.rotation = 0
 
     def rotate(self):
-        if self.rotation % 2 == 0:
-            y = self.blocks[2][1]
+        if self.rotation % 4 == 0:
+            y = self.blocks[3][1]
 
             i = -1
             for block in self.blocks:
                 block[0], block[1] = block[0] + i, y
                 i += 1
 
-        else:
+        elif self.rotation % 4 == 1:
             x = self.blocks[2][0]
 
-            i = -1
+            i = -3
             for block in self.blocks:
                 block[0], block[1] = x, block[1] + i
                 i += 1
             
+        elif self.rotation % 4 == 2:
+            y = self.blocks[3][1]
+
+            i = -2
+            for block in self.blocks:
+                block[0], block[1] = block[0] + i, y
+                i += 1
+
+        elif self.rotation % 4 == 3:
+            x = self.blocks[1][0]
+
+            i = -3
+            for block in self.blocks:
+                block[0], block[1] = x, block[1] + i
+                i += 1
+
         self.rotation += 1
+        print(self.rotation)
 
 class T(Tetromino):
     def __init__(self, screen):
