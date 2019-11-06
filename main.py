@@ -45,8 +45,8 @@ class Game:
                     self.update_screen(tetromino)
 
             if not self.calculate_collision(tetromino, 0, 1): 
-                time.sleep(0.05)
-                # tetromino.update_position(0, 1)
+                time.sleep(0.1)
+                tetromino.update_position(0, 1)
                 self.update_screen(tetromino)
             else:
                 self.store_block(tetromino)
@@ -56,7 +56,10 @@ class Game:
             if self.lose_checking():
                 running = False
 
-            print(self.grid)
+            row = self.row_checking()
+            if row:
+                del self.grid[row]
+                self.grid.insert(0, [0 for i in range(self.grid_width)])
             
     def update_screen(self, tetromino):
         self.screen.fill((0,0,0))
@@ -86,9 +89,16 @@ class Game:
         else:
             return False
 
+    def row_checking(self):
+        for row in range(len(self.grid)):
+            if all(self.grid[row]):
+                return row
+        else:
+            return None
+
     def lose_checking(self):
-        for col in self.grid:
-            if col[0]:
+        for col in self.grid[0]:
+            if col:
                 return True
         else:
             return False
