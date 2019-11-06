@@ -15,7 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
-        self.tetromino_types = [T]
+        self.tetromino_types = [L, T, Square, Line]
 
     def run(self):
         running = True
@@ -49,7 +49,7 @@ class Game:
                 pass
             elif not self.calculate_collision(tetromino, 0, 1): 
                 time.sleep(0.05)
-                # tetromino.update_position(0, 1)
+                tetromino.update_position(0, 1)
                 self.update_screen(tetromino)
             else:
                 self.store_block(tetromino)
@@ -197,6 +197,30 @@ class L(Tetromino):
         self.colour = (0, 0, 255)
         self.rotation = 0
 
+    def rotate(self):
+        pivot = self.blocks[0]
+
+        if self.rotation % 4 == 0:
+            self.blocks[1] = [pivot[0], pivot[1] - 1]
+            self.blocks[2] = [pivot[0], pivot[1] - 2]
+            self.blocks[3] = [pivot[0] - 1, pivot[1]]
+
+        elif self.rotation % 4 == 1:
+            self.blocks[1] = [pivot[0] + 1, pivot[1]]
+            self.blocks[2] = [pivot[0], pivot[1] - 1]
+            self.blocks[3] = [pivot[0] + 2, pivot[1]]
+
+        elif self.rotation % 4 == 2:
+            self.blocks[1] = [pivot[0] + 1, pivot[1]]
+            self.blocks[2] = [pivot[0], pivot[1] + 1]
+            self.blocks[3] = [pivot[0], pivot[1] + 2]
+
+        elif self.rotation % 4 == 3:
+            self.blocks[1] = [pivot[0] + 1, pivot[1]]
+            self.blocks[2] = [pivot[0], pivot[1] + 1]
+            self.blocks[3] = [pivot[0], pivot[1] + 2]
+
+        self.rotation += 1
 
 if __name__ == "__main__":
     game = Game(12, 20)
