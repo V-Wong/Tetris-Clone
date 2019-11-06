@@ -8,14 +8,15 @@ class Game:
     def __init__(self, width, height):
         self.grid_width = width
         self.grid_height = height
+        self.score = 0
 
         self.grid = [[0 for i in range(self.grid_width)] for j in range(self.grid_height)]
 
         self.screen = pygame.display.set_mode(
-                    (self.grid_width * 50, self.grid_height * 50))
+                    (self.grid_width * 50 + 400, self.grid_height * 50))
 
-        pygame.key.set_repeat(50, 50)
-
+        pygame.key.set_repeat(100, 50)
+    
         self.tetromino_types = [T, L, Line, Square]
 
     def run(self):
@@ -43,7 +44,6 @@ class Game:
                             tetromino.update_position(0, 1)
                     elif event.key == pygame.K_z:
                         tetromino.rotate()
-                        break
                     elif event.key == pygame.K_SPACE:
                         tetromino.update_position(0, 1)
                     break
@@ -62,6 +62,7 @@ class Game:
             if row:
                 del self.grid[row]
                 self.grid.insert(0, [0 for i in range(self.grid_width)])
+                self.score += 100
 
             cycle += 1
 
@@ -69,10 +70,31 @@ class Game:
                 self.update_screen(tetromino)
             
     def update_screen(self, tetromino):
-        self.screen.fill((0,0,0))
+        self.screen.fill((40, 40, 40))
+        self.draw_panel()
+        self.draw_score()
         tetromino.draw_moving_block()
         self.draw_stationary_blocks()
         pygame.display.update()
+
+    def draw_panel(self):
+        pygame.draw.rect(self.screen, (54, 54, 54), 
+                        (self.grid_width * 50, 0, 400, self.grid_height * 50))
+        pygame.font.init()
+
+        myfont = pygame.font.SysFont("Arial", 70)
+        letter = myfont.render(f"Tetris-Clone", 0, (255, 255, 255))
+        self.screen.blit(letter, (self.grid_width * 50 + 15, 100))
+
+        myfont = pygame.font.SysFont("Arial", 25)
+        letter = myfont.render(f"V-Wong.github.io", 0, (255, 255, 255))
+        self.screen.blit(letter, (self.grid_width * 50 + 120, 180))
+
+    def draw_score(self):
+        pygame.font.init()
+        myfont = pygame.font.SysFont("Arial", 40)
+        letter = myfont.render(f"Score: {self.score}", 0, (255, 255, 255))
+        self.screen.blit(letter, (self.grid_width * 50 + 120, 300))
 
     def store_block(self, tetromino):
         for block in tetromino.blocks:
