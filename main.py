@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 import random
 import time
 import sys
@@ -10,12 +9,12 @@ class Game:
         self.grid_width = width
         self.grid_height = height
 
-        self.grid = [[0 for i in range(self.grid_height)] for j in range(self.grid_width)]
+        self.grid = [[0 for i in range(self.grid_width)] for j in range(self.grid_height)]
 
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
-        self.tetromino_types = [L]
+        self.tetromino_types = [T, L, Line, Square]
 
     def run(self):
         running = True
@@ -55,8 +54,9 @@ class Game:
                 tetromino = None
 
             if self.lose_checking():
-                input()
                 running = False
+
+            print(self.grid)
             
     def update_screen(self, tetromino):
         self.screen.fill((0,0,0))
@@ -66,13 +66,13 @@ class Game:
 
     def store_block(self, tetromino):
         for block in tetromino.blocks:
-            self.grid[block[0]][block[1]] = tetromino.colour
+            self.grid[block[1]][block[0]] = tetromino.colour
 
     def draw_stationary_blocks(self):
-        for col in range(len(self.grid)):
-            for row in range(len(self.grid[col])):
-                if self.grid[col][row]:
-                    pygame.draw.rect(self.screen, self.grid[col][row], 
+        for row in range(len(self.grid)):
+            for col in range(len(self.grid[row])):
+                if self.grid[row][col]:
+                    pygame.draw.rect(self.screen, self.grid[row][col], 
                                     (col * 50, row * 50, 50, 50))
                     pygame.draw.rect(self.screen, (255, 255, 255), 
                                     (col * 50, row * 50, 50, 50), 1)
@@ -81,7 +81,7 @@ class Game:
         for block in tetromino.blocks:
             if (not (0 <= block[0] + dx < self.grid_width)
                     or not (0 <= block[1] + dy < self.grid_height)
-                    or self.grid[block[0] + dx][block[1] + dy]):
+                    or self.grid[block[1] + dy][block[0] + dx]):
                 return True
         else:
             return False
@@ -226,5 +226,7 @@ class L(Tetromino):
         self.rotation += 1
 
 if __name__ == "__main__":
-    game = Game(12, 20)
-    game.run()
+    while True:
+        game = Game(12, 20)
+        game.run()
+        input()
