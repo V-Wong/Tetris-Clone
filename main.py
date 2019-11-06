@@ -22,6 +22,7 @@ class Game:
     def run(self):
         running = True
         tetromino = None
+        hold = None
         cycle = 0
 
         next_tetromino = random.choice(self.tetromino_types)(self.screen)
@@ -46,6 +47,12 @@ class Game:
                             tetromino.update_position(0, 1)
                     elif event.key == pygame.K_z:
                         tetromino.rotate()
+                    elif event.key == pygame.K_c:
+                        if hold:
+                            tetromino, hold = hold.__class__(self.screen), tetromino.__class__(self.screen)
+                        else:
+                            hold = tetromino.__class__(self.screen)
+                            tetromino = random.choice(self.tetromino_types)(self.screen)
                     elif event.key == pygame.K_SPACE:
                         tetromino.update_position(0, 1)
 
@@ -69,13 +76,15 @@ class Game:
             cycle += 1
 
             if tetromino:
-                self.update_screen(tetromino, next_tetromino)
+                self.update_screen(tetromino, next_tetromino, hold)
             
-    def update_screen(self, tetromino, next_tetromino):
+    def update_screen(self, tetromino, next_tetromino, hold):
         self.screen.fill((40, 40, 40))
         self.draw_panel()
         self.draw_score()
         self.draw_next_tetromino(next_tetromino)
+        if hold:
+            self.draw_hold(hold)
         tetromino.draw_moving_block()
         self.draw_stationary_blocks()
         pygame.display.update()
@@ -86,7 +95,11 @@ class Game:
         pygame.font.init()
 
         pygame.draw.rect(self.screen, (40, 40, 40), 
-                        ((self.grid_width + 1) * 50, 350, 300, 300))
+                        ((self.grid_width + 1) * 50, 325, 300, 300))
+        pygame.font.init()
+
+        pygame.draw.rect(self.screen, (40, 40, 40), 
+                        ((self.grid_width + 1) * 50, 675, 300, 300))
         pygame.font.init()
 
         myfont = pygame.font.SysFont("Arial", 70)
@@ -97,9 +110,13 @@ class Game:
         letter = myfont.render(f"V-Wong.github.io", 0, (255, 255, 255))
         self.screen.blit(letter, (self.grid_width * 50 + 110, 180))
 
-        myfont = pygame.font.SysFont("Arial", 50)
+        myfont = pygame.font.SysFont("Arial", 40)
         letter = myfont.render(f"Next", 0, (255, 255, 255))
-        self.screen.blit(letter, (self.grid_width * 50 + 140, 360))
+        self.screen.blit(letter, ((self.grid_width + 3) * 50, (self.grid_height - 13) * 50))
+
+        myfont = pygame.font.SysFont("Arial", 40)
+        letter = myfont.render(f"Hold", 0, (255, 255, 255))
+        self.screen.blit(letter, ((self.grid_width + 3) * 50, (self.grid_height - 6) * 50))
 
     def draw_score(self):
         pygame.font.init()
@@ -110,9 +127,16 @@ class Game:
     def draw_next_tetromino(self, next_tetromino):
         for block in next_tetromino.blocks:
             pygame.draw.rect(self.screen, next_tetromino.colour, 
-                            (block[0] * 50 + 500, block[1] * 50 + 450, 50, 50))
+                            ((block[0] + 10) * 50, (block[1] + 9) * 50, 50, 50))
             pygame.draw.rect(self.screen, (255, 255, 255), 
-                            (block[0] * 50 + 500, block[1] * 50 + 450, 50, 50), 1)
+                            ((block[0] + 10) * 50, (block[1] + 9) * 50, 50, 50), 1)
+
+    def draw_hold(self, hold):
+        for block in hold.blocks:
+            pygame.draw.rect(self.screen, hold.colour, 
+                            ((block[0] + 10) * 50, (block[1] + 16) * 50, 50, 50))
+            pygame.draw.rect(self.screen, (255, 255, 255), 
+                            ((block[0] + 10) * 50, (block[1] + 16) * 50, 50, 50), 1)
 
 
     def store_block(self, tetromino):
