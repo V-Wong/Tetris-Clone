@@ -45,15 +45,18 @@ class Game:
                         tetromino.update_position(0, 1)
                     self.update_screen(tetromino)
 
-            if self.lose_checking():
-                pass
-            elif not self.calculate_collision(tetromino, 0, 1): 
+            if not self.calculate_collision(tetromino, 0, 1): 
                 time.sleep(0.05)
                 tetromino.update_position(0, 1)
                 self.update_screen(tetromino)
             else:
                 self.store_block(tetromino)
+                self.update_screen(tetromino)
                 tetromino = None
+
+            if self.lose_checking():
+                input()
+                running = False
             
     def update_screen(self, tetromino):
         self.screen.fill((0,0,0))
