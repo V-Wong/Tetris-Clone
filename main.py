@@ -17,7 +17,7 @@ class Game:
 
         pygame.key.set_repeat(100, 50)
     
-        self.tetromino_types = [T, L, Line, Square]
+        self.tetromino_types = [L]
 
     def run(self):
         running = True
@@ -60,7 +60,7 @@ class Game:
 
             if not self.calculate_collision(tetromino, 0, 1): 
                 if cycle % 100 == 0:
-                    tetromino.update_position(0, 1)
+                    tetromino.update_position(0, 0)
             else:
                 self.store_block(tetromino)
                 tetromino = next_tetromino
@@ -287,27 +287,27 @@ class L(Tetromino):
         self.rotation = 0
 
     def rotate(self):
-        pivot = self.blocks[0]
+        pivot = self.blocks[1]
 
         if self.rotation % 4 == 0:
-            self.blocks[1] = [pivot[0], pivot[1] - 1]
-            self.blocks[2] = [pivot[0], pivot[1] - 2]
-            self.blocks[3] = [pivot[0] - 1, pivot[1]]
+            self.blocks[0] = [pivot[0], pivot[1] - 1]
+            self.blocks[2] = [pivot[0] - 1, pivot[1] - 1]
+            self.blocks[3] = [pivot[0], pivot[1] + 1]
 
         elif self.rotation % 4 == 1:
-            self.blocks[1] = [pivot[0] + 1, pivot[1]]
-            self.blocks[2] = [pivot[0], pivot[1] - 1]
-            self.blocks[3] = [pivot[0] + 2, pivot[1]]
+            self.blocks[0] = [pivot[0] - 1, pivot[1]]
+            self.blocks[2] = [pivot[0] + 1, pivot[1] - 1]
+            self.blocks[3] = [pivot[0] + 1, pivot[1]]
 
         elif self.rotation % 4 == 2:
-            self.blocks[1] = [pivot[0] + 1, pivot[1]]
-            self.blocks[2] = [pivot[0], pivot[1] + 1]
-            self.blocks[3] = [pivot[0], pivot[1] + 2]
+            self.blocks[0] = [pivot[0] + 1, pivot[1] - 1]
+            self.blocks[2] = [pivot[0], pivot[1] - 1]
+            self.blocks[3] = [pivot[0], pivot[1] + 1]
 
         elif self.rotation % 4 == 3:
-            self.blocks[1] = [pivot[0], pivot[1] + 1]
+            self.blocks[0] = [pivot[0] + 1, pivot[1] + 1]
             self.blocks[2] = [pivot[0] - 1, pivot[1]]
-            self.blocks[3] = [pivot[0] - 2, pivot[1]]
+            self.blocks[3] = [pivot[0] + 1, pivot[1]]
 
         self.rotation += 1
 
