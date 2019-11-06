@@ -47,14 +47,16 @@ class Game:
                             tetromino.update_position(0, 1)
                     elif event.key == pygame.K_z:
                         tetromino.rotate()
+                        if self.calculate_collision(tetromino, 0, 0):
+                            tetromino.rotate()
+                            tetromino.rotate()
+                            tetromino.rotate()
                     elif event.key == pygame.K_c:
                         if hold:
                             tetromino, hold = hold.__class__(self.screen), tetromino.__class__(self.screen)
                         else:
                             hold = tetromino.__class__(self.screen)
                             tetromino = random.choice(self.tetromino_types)(self.screen)
-                    elif event.key == pygame.K_SPACE:
-                        tetromino.update_position(0, 1)
 
             if not self.calculate_collision(tetromino, 0, 1): 
                 if cycle % 100 == 0:
@@ -247,6 +249,7 @@ class Line(Tetromino):
         self.rotation += 1
         print(self.rotation)
 
+
 class T(Tetromino):
     def __init__(self, screen):
         self.blocks =  [[5, 0], [6, 0], [7, 0], [6, 1]]
@@ -274,6 +277,7 @@ class T(Tetromino):
 
  
         self.rotation += 1
+
 
 class L(Tetromino):
     def __init__(self, screen):
@@ -306,6 +310,7 @@ class L(Tetromino):
             self.blocks[3] = [pivot[0] - 2, pivot[1]]
 
         self.rotation += 1
+
 
 if __name__ == "__main__":
     while True:
