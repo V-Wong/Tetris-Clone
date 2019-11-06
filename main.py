@@ -14,12 +14,15 @@ class Game:
         self.screen = pygame.display.set_mode(
                     (self.grid_width * 50, self.grid_height * 50))
 
+        pygame.key.set_repeat(50, 50)
+
         self.tetromino_types = [T, L, Line, Square]
 
     def run(self):
         running = True
-
         tetromino = None
+        cycle = 0
+
         while running:
             if not tetromino:
                 tetromino = random.choice(self.tetromino_types)(self.screen)
@@ -40,19 +43,18 @@ class Game:
                             tetromino.update_position(0, 1)
                     elif event.key == pygame.K_z:
                         tetromino.rotate()
+                        break
                     elif event.key == pygame.K_SPACE:
                         tetromino.update_position(0, 1)
-                    self.update_screen(tetromino)
+                    break
 
             if not self.calculate_collision(tetromino, 0, 1): 
-                time.sleep(0.1)
-                tetromino.update_position(0, 1)
-                self.update_screen(tetromino)
+                if cycle % 100 == 0:
+                    tetromino.update_position(0, 1)
             else:
                 self.store_block(tetromino)
-                self.update_screen(tetromino)
                 tetromino = None
-
+            
             if self.lose_checking():
                 running = False
 
@@ -60,6 +62,11 @@ class Game:
             if row:
                 del self.grid[row]
                 self.grid.insert(0, [0 for i in range(self.grid_width)])
+
+            cycle += 1
+
+            if tetromino:
+                self.update_screen(tetromino)
             
     def update_screen(self, tetromino):
         self.screen.fill((0,0,0))
