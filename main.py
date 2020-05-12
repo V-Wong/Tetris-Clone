@@ -45,21 +45,10 @@ class Game:
                     running = sys.exit()
                 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT:
-                        if not self.calculate_collision(tetromino, 1, 0): 
-                            tetromino.update_position(1, 0)
-                    elif event.key == pygame.K_LEFT:
-                        if not self.calculate_collision(tetromino, -1, 0): 
-                            tetromino.update_position(-1, 0)
-                    elif event.key == pygame.K_DOWN:
-                        if not self.calculate_collision(tetromino, 0, 1): 
-                            tetromino.update_position(0, 1)
+                    if event.key in (pygame.K_RIGHT, pygame.K_LEFT, pygame.K_DOWN):
+                        self.move_piece(tetromino, event.key)
                     elif event.key == pygame.K_z:
-                        tetromino.rotate()
-                        if self.calculate_collision(tetromino, 0, 0):
-                            tetromino.rotate()
-                            tetromino.rotate()
-                            tetromino.rotate()
+                        self.rotate_piece(tetromino)
                     elif event.key == pygame.K_c:
                         if hold:
                             tetromino, hold = hold.__class__(self.screen), tetromino.__class__(self.screen)
@@ -93,6 +82,24 @@ class Game:
         tetromino.draw_moving_block()
         self.draw_stationary_blocks()
         pygame.display.update()
+
+    def move_piece(self, tetromino: Tetromino, key: pygame.key):
+        if key == pygame.K_RIGHT:
+            if not self.calculate_collision(tetromino, 1, 0): 
+                tetromino.update_position(1, 0)
+        elif key == pygame.K_LEFT:
+            if not self.calculate_collision(tetromino, -1, 0): 
+                tetromino.update_position(-1, 0)
+        elif key == pygame.K_DOWN:
+            if not self.calculate_collision(tetromino, 0, 1): 
+                tetromino.update_position(0, 1)
+
+    def rotate_piece(self, tetromino: Tetromino):
+        tetromino.rotate()
+        if self.calculate_collision(tetromino, 0, 0):
+            tetromino.rotate()
+            tetromino.rotate()
+            tetromino.rotate()
 
     def store_block(self, tetromino: Tetromino):
         for block in tetromino.blocks:
