@@ -1,10 +1,12 @@
 import pygame
 
 class Tetromino:
-    def __init__(self, screen):
-        pass
+    def __init__(self, screen: pygame.display):
+        self.blocks = []
+        self.screen = screen
+        self.colour = ()
 
-    def update_position(self, dx, dy):
+    def update_position(self, dx: int, dy: int):
         for block in self.blocks:
             block[0] += dx
             block[1] += dy
@@ -21,7 +23,7 @@ class Tetromino:
 
 
 class Square(Tetromino):
-    def __init__(self, screen):
+    def __init__(self, screen: pygame.display):
         self.blocks =  [[6, 0], [6, 1], [7,0], [7, 1]]
         self.screen = screen
         self.colour = (0, 255, 255)
@@ -29,7 +31,7 @@ class Square(Tetromino):
         
 
 class Line(Tetromino):
-    def __init__(self, screen):
+    def __init__(self, screen: pygame.display):
         self.blocks =  [[6, 0], [6, 1], [6, 2], [6, 3]]
         self.screen = screen
         self.colour = (255, 0, 0)
@@ -71,8 +73,9 @@ class Line(Tetromino):
         self.rotation += 1
         print(self.rotation)
 
+
 class T(Tetromino):
-    def __init__(self, screen):
+    def __init__(self, screen: pygame.display):
         self.blocks =  [[6, 0], [7, 0], [8, 0], [7, 1]]
         self.screen = screen
         self.colour = (0, 255, 0)

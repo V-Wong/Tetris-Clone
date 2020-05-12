@@ -5,6 +5,7 @@ import time
 import sys
 
 import tetrominos as Tetrominos
+from tetrominos import Tetromino
 
 
 GRID_SIZE = 50
@@ -12,19 +13,21 @@ BLACK = (255, 255, 255)
 
 
 class Game:
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int):
         self.grid_width = width
         self.grid_height = height
         self.score = 0
 
-        self.grid = [[0 for i in range(self.grid_width)] for j in range(self.grid_height)]
+        self.grid = [[0 for _ in range(self.grid_width)]
+                     for _ in range(self.grid_height)]
 
-        self.screen = pygame.display.set_mode(
-                    (self.grid_width * GRID_SIZE, self.grid_height * GRID_SIZE))
+        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE,
+                                              self.grid_height * GRID_SIZE))
 
         pygame.key.set_repeat(100, 50)
     
-        self.tetromino_types = [Tetrominos.L, Tetrominos.T, Tetrominos.Square, Tetrominos.Line]
+        self.tetromino_types = [Tetrominos.L, Tetrominos.T, 
+                                Tetrominos.Square, Tetrominos.Line]
 
     def run(self):
         running = True
@@ -84,15 +87,15 @@ class Game:
             cycle += 1
 
             if tetromino:
-                self.update_screen(tetromino, next_tetromino, hold)
+                self.update_screen(tetromino, next_tetromino)
             
-    def update_screen(self, tetromino, next_tetromino, hold):
+    def update_screen(self, tetromino: Tetromino, next_tetromino: Tetromino):
         self.screen.fill((40, 40, 40))
         tetromino.draw_moving_block()
         self.draw_stationary_blocks()
         pygame.display.update()
 
-    def store_block(self, tetromino):
+    def store_block(self, tetromino: Tetromino):
         for block in tetromino.blocks:
             self.grid[block[1]][block[0]] = tetromino.colour
 
@@ -101,11 +104,15 @@ class Game:
             for col in range(len(self.grid[row])):
                 if self.grid[row][col]:
                     pygame.draw.rect(self.screen, self.grid[row][col], 
-                                    (col * GRID_SIZE, row * GRID_SIZE, GRID_SIZE, GRID_SIZE))
+                                     (col * GRID_SIZE, 
+                                      row * GRID_SIZE,
+                                      GRID_SIZE, GRID_SIZE))
                     pygame.draw.rect(self.screen, BLACK, 
-                                    (col * GRID_SIZE, row * GRID_SIZE, GRID_SIZE, GRID_SIZE), 1)
+                                    (col * GRID_SIZE,
+                                     row * GRID_SIZE,
+                                     GRID_SIZE, GRID_SIZE), 1)
 
-    def calculate_collision(self, tetromino, dx, dy):
+    def calculate_collision(self, tetromino: Tetromino, dx: int, dy: int):
         for block in tetromino.blocks:
             if (not (0 <= block[0] + dx < self.grid_width)
                     or not (0 <= block[1] + dy < self.grid_height)
