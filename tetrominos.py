@@ -1,5 +1,8 @@
 import pygame
 
+GRID_SIZE = 75
+
+
 class Tetromino:
     def __init__(self, screen: pygame.display):
         self.blocks = []
@@ -14,9 +17,9 @@ class Tetromino:
     def draw_moving_block(self):
         for block in self.blocks:
             pygame.draw.rect(self.screen, self.colour, 
-                            (block[0] * 50, block[1] * 50, 50, 50))
+                            (block[0] * GRID_SIZE, block[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(self.screen, (255, 255, 255), 
-                            (block[0] * 50, block[1] * 50, 50, 50), 1)
+                            (block[0] * GRID_SIZE, block[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE), 1)
 
     def rotate(self):
         pass

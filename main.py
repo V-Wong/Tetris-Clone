@@ -7,8 +7,7 @@ import sys
 import tetrominos as Tetrominos
 from tetrominos import Tetromino
 
-
-GRID_SIZE = 50
+GRID_SIZE = 75
 BLACK = (255, 255, 255)
 
 
@@ -22,7 +21,7 @@ class Game:
                      for _ in range(self.grid_height)]
 
         self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE,
-                                              self.grid_height * GRID_SIZE))
+                                               self.grid_height * GRID_SIZE))
 
         pygame.key.set_repeat(100, 50)
     
@@ -108,9 +107,9 @@ class Game:
                                       row * GRID_SIZE,
                                       GRID_SIZE, GRID_SIZE))
                     pygame.draw.rect(self.screen, BLACK, 
-                                    (col * GRID_SIZE,
-                                     row * GRID_SIZE,
-                                     GRID_SIZE, GRID_SIZE), 1)
+                                     (col * GRID_SIZE,
+                                      row * GRID_SIZE,
+                                      GRID_SIZE, GRID_SIZE), 1)
 
     def calculate_collision(self, tetromino: Tetromino, dx: int, dy: int):
         for block in tetromino.blocks:
