@@ -1,6 +1,6 @@
 import pygame
 
-GRID_SIZE = 75
+GRID_SIZE = 72
 
 
 class Tetromino:

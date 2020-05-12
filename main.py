@@ -7,7 +7,7 @@ import sys
 import tetrominos as Tetrominos
 from tetrominos import Tetromino
 
-GRID_SIZE = 75
+GRID_SIZE = 72
 BLACK = (255, 255, 255)
 
 
@@ -20,7 +20,7 @@ class Game:
         self.grid = [[0 for _ in range(self.grid_width)]
                      for _ in range(self.grid_height)]
 
-        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE,
+        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE + 1550 + 144,
                                                self.grid_height * GRID_SIZE))
 
         pygame.key.set_repeat(100, 50)
@@ -58,7 +58,7 @@ class Game:
 
             if not self.calculate_collision(tetromino, 0, 1): 
                 if cycle % 25 == 0:
-                    tetromino.update_position(0, 0)
+                    tetromino.update_position(0, 1)
             else:
                 self.store_block(tetromino)
                 tetromino = next_tetromino
@@ -144,6 +144,6 @@ class Game:
 
 if __name__ == "__main__":
     while True:
-        game = Game(12, 20)
+        game = Game(10, 20)
         game.run()
         input()
