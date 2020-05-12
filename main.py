@@ -1,3 +1,5 @@
+from typing import List
+
 import pygame
 from pygame.locals import *
 import random
@@ -34,12 +36,12 @@ class Game:
         hold = None
         cycle = 0
 
-        next_tetromino = random.choice(self.tetromino_types)(self.screen)
+        piece_rotation = [random.choice(self.tetromino_types)(self.screen)
+                          for _ in range(6)]
 
-        while running:
-            if not tetromino:
-                tetromino = random.choice(self.tetromino_types)(self.screen)
-            
+        tetromino = piece_rotation.pop(0)
+
+        while running:            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = sys.exit()
@@ -60,10 +62,11 @@ class Game:
                 if cycle % 25 == 0:
                     tetromino.update_position(0, 1)
             else:
+                print(tetromino.colour)
                 self.store_block(tetromino)
-                tetromino = next_tetromino
-                next_tetromino = random.choice(self.tetromino_types)(self.screen)
-            
+                tetromino = piece_rotation.pop(0)
+                piece_rotation.append(random.choice(self.tetromino_types)(self.screen))
+
             if self.lose_checking():
                 running = False
 
@@ -73,15 +76,31 @@ class Game:
                 self.grid.insert(0, [0 for i in range(self.grid_width)])
 
             cycle += 1
-
-            if tetromino:
-                self.update_screen(tetromino, next_tetromino)
+                
+            self.update_screen(tetromino, piece_rotation)
             
-    def update_screen(self, tetromino: Tetromino, next_tetromino: Tetromino):
+    def update_screen(self, tetromino: Tetromino, piece_rotation: List[Tetromino]):
         self.screen.fill((40, 40, 40))
         tetromino.draw_moving_block()
         self.draw_stationary_blocks()
+        self.draw_piece_rotation(piece_rotation)
         pygame.display.update()
+
+    def draw_piece_rotation(self, piece_rotation: List[Tetromino]):
+        pygame.draw.rect(self.screen, (0, 0, 0), 
+                         (self.grid_width * GRID_SIZE, 0, GRID_SIZE * 4, GRID_SIZE  * self.grid_height))
+        
+        prev_piece = None
+        for piece in piece_rotation: 
+            copy_piece = piece.__class__(self.screen)
+            while max(block[0] for block in copy_piece.blocks) < self.grid_width:
+                copy_piece.update_position(self.grid_width // 2, 0)
+            while (prev_piece and min(block[1] for block in copy_piece.blocks) 
+                    < max(block[1] for block in prev_piece.blocks) + 2):
+                copy_piece.update_position(0, 1)
+
+            copy_piece.draw_moving_block()
+            prev_piece = copy_piece
 
     def move_piece(self, tetromino: Tetromino, key: pygame.key):
         if key == pygame.K_RIGHT:

@@ -9,6 +9,11 @@ class Tetromino:
         self.screen = screen
         self.colour = ()
 
+    def set_position(self, dx: int, dy: int):
+        for block in self.blocks:
+            block[0] = dx
+            block[1] = dy
+
     def update_position(self, dx: int, dy: int):
         for block in self.blocks:
             block[0] += dx
