@@ -1,6 +1,6 @@
 import pygame
 
-GRID_SIZE = 72
+GRID_SIZE = 60
 
 
 class Tetromino:
@@ -8,11 +8,6 @@ class Tetromino:
         self.blocks = []
         self.screen = screen
         self.colour = ()
-
-    def set_position(self, dx: int, dy: int):
-        for block in self.blocks:
-            block[0] = dx
-            block[1] = dy
 
     def update_position(self, dx: int, dy: int):
         for block in self.blocks:

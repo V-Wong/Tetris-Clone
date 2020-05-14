@@ -9,7 +9,7 @@ import sys
 import tetrominos as Tetrominos
 from tetrominos import Tetromino
 
-GRID_SIZE = 72
+GRID_SIZE = 60
 BLACK = (255, 255, 255)
 
 
@@ -22,7 +22,7 @@ class Game:
         self.grid = [[0 for _ in range(self.grid_width)]
                      for _ in range(self.grid_height)]
 
-        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE + 1550 + 144,
+        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE + 1533,
                                                self.grid_height * GRID_SIZE))
 
         pygame.key.set_repeat(100, 50)
