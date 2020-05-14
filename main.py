@@ -105,6 +105,11 @@ class Game:
         prev_piece = None
         for piece in piece_rotation: 
             copy_piece = piece.__class__(self.screen)
+            if isinstance(copy_piece, Tetrominos.Line):
+                copy_piece.rotate()
+                for block in copy_piece.blocks:
+                    block[1] -= 3
+
             while max(block[0] for block in copy_piece.blocks) < self.grid_width:
                 copy_piece.update_position(self.grid_width // 2, 0)
             while (prev_piece and min(block[1] for block in copy_piece.blocks) 
