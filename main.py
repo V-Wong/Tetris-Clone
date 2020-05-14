@@ -89,14 +89,14 @@ class Game:
         pygame.display.update()
 
     def draw_meta_information(self):
-        title_font = pygame.font.SysFont("Arial", 60)
-        self.screen.blit(title_font.render("Tetris Clone", True, (255, 255, 255)), (10, 0))
+        title_font = pygame.font.SysFont("Arial", 35, bold=True)
+        self.screen.blit(title_font.render("Tetris Clone", True, (255, 255, 255)), (0, 0))
 
-        subtitle_font = pygame.font.SysFont("Arial", 20)
+        subtitle_font = pygame.font.SysFont("Arial", 16)
         self.screen.blit(subtitle_font.render("Source Code: github.com/V-Wong/Tetris-Clone",
-                                              True, (255, 255, 255)), (10, 65))
+                                              True, (255, 255, 255)), (0, 40))
         self.screen.blit(subtitle_font.render("Other Projects: vwong.dev",
-                                              True, (255, 255, 255)), (10, 90))
+                                              True, (255, 255, 255)), (0, 60))
 
     def draw_piece_rotation(self, piece_rotation: List[Tetromino]):
         pygame.draw.rect(self.screen, (0, 0, 0), 
