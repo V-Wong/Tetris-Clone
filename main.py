@@ -22,7 +22,8 @@ class Game:
         self.grid = [[0 for _ in range(self.grid_width)]
                      for _ in range(self.grid_height)]
 
-        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE + 1533,
+        pygame.font.init()
+        self.screen = pygame.display.set_mode((self.grid_width * GRID_SIZE + 4 * GRID_SIZE,
                                                self.grid_height * GRID_SIZE))
 
         pygame.key.set_repeat(100, 50)
@@ -84,7 +85,18 @@ class Game:
         tetromino.draw_moving_block()
         self.draw_stationary_blocks()
         self.draw_piece_rotation(piece_rotation)
+        self.draw_meta_information()
         pygame.display.update()
+
+    def draw_meta_information(self):
+        title_font = pygame.font.SysFont("Arial", 60)
+        self.screen.blit(title_font.render("Tetris Clone", True, (255, 255, 255)), (10, 0))
+
+        subtitle_font = pygame.font.SysFont("Arial", 20)
+        self.screen.blit(subtitle_font.render("Source Code: github.com/V-Wong/Tetris-Clone",
+                                              True, (255, 255, 255)), (10, 65))
+        self.screen.blit(subtitle_font.render("Other Projects: vwong.dev",
+                                              True, (255, 255, 255)), (10, 90))
 
     def draw_piece_rotation(self, piece_rotation: List[Tetromino]):
         pygame.draw.rect(self.screen, (0, 0, 0), 
